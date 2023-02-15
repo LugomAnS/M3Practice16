@@ -6,6 +6,12 @@ namespace DataProvider
     public class SQLConnectionDB
     {
         private SqlConnectionStringBuilder connString;
+        private SqlConnection connection;
+
+        /// <summary>
+        /// Сообщает об изменении статуса соединения с БД
+        /// </summary>
+        public event Action<string> ConnectionState;
 
         public SQLConnectionDB()
         {
@@ -15,11 +21,15 @@ namespace DataProvider
                 InitialCatalog = "ADONETTestDB",
                 IntegratedSecurity = true
             };
+
+            connection.StateChange += Connection_StateChange;
         }
 
         public string OpenConnection()
         {
-            SqlConnection connection = new SqlConnection() { ConnectionString = connString.ConnectionString };
+            connection = new SqlConnection() { ConnectionString = connString.ConnectionString };
+
+            connection.StateChange += Connection_StateChange;
 
             try
             {
@@ -34,6 +44,11 @@ namespace DataProvider
             {
                 connection.Close();
             }
+        }
+
+        private void Connection_StateChange(object sender, System.Data.StateChangeEventArgs e)
+        {
+            ConnectionState?.Invoke((sender as SqlConnection).State.ToString());
         }
     }
 }
