@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using AdoNet.Infrastructure;
 using DataProvider;
 
@@ -48,8 +43,6 @@ namespace AdoNet.ViewModels
         public ICommand SQLConnectionSet { get; }
         private void OnSQLConnectionSetExecute(object p)
         {
-            //Task.Factory.StartNew(sqlConnection.OpenConnection);
-            //sqlConnection.OpenConnection();
             sqlConnection.OpenConnectionAsync();
         }
         private bool CanSQLConnectionSetExecute(object p) => true;

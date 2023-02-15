@@ -1,6 +1,5 @@
 ﻿using System.Data.SqlClient;
 using System.Diagnostics;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DataProvider
 {
@@ -48,6 +47,7 @@ namespace DataProvider
             await Task.Factory.StartNew(OpenConnection);
         }
 
+        // сообщаем подписчикам об изменении статуса соединения
         private void Connection_StateChange(object sender, System.Data.StateChangeEventArgs e)
         {
             ConnectionState?.Invoke((sender as SqlConnection).State.ToString());
