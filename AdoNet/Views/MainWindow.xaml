@@ -4,9 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AdoNet"
+        xmlns:vm="clr-namespace:AdoNet.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+        Title="MainWindow" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <vm:MainWindowViewModel />
+    </Window.DataContext>
+    <StackPanel Orientation="Vertical">
+        <Button Content="Установить соединение"
+                Command="{Binding SQLConnectionSet}"/>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Состояние" Margin="5"/>
+            <TextBlock Text="{Binding SqlConnectionStatus}" Margin="5"/>
+        </StackPanel>
+    </StackPanel>
 </Window>

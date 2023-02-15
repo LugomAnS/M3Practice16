@@ -1,4 +1,5 @@
 ﻿using System.Data.SqlClient;
+using System.Diagnostics;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DataProvider
@@ -21,29 +22,30 @@ namespace DataProvider
                 InitialCatalog = "ADONETTestDB",
                 IntegratedSecurity = true
             };
-
+            connection = new SqlConnection(connString.ConnectionString);
             connection.StateChange += Connection_StateChange;
         }
 
-        public string OpenConnection()
+        public void OpenConnection()
         {
-            connection = new SqlConnection() { ConnectionString = connString.ConnectionString };
-
-            connection.StateChange += Connection_StateChange;
-
             try
             {
                 connection.Open();
-                return "Соединение установлено";
+                Thread.Sleep(2000);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return "Исключение";
+                Debug.WriteLine(e.Message);
             }
             finally
             {
                 connection.Close();
             }
+        }
+
+        public async void OpenConnectionAsync()
+        {
+            await Task.Factory.StartNew(OpenConnection);
         }
 
         private void Connection_StateChange(object sender, System.Data.StateChangeEventArgs e)

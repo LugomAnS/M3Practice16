@@ -48,7 +48,9 @@ namespace AdoNet.ViewModels
         public ICommand SQLConnectionSet { get; }
         private void OnSQLConnectionSetExecute(object p)
         {
-            sqlConnection.OpenConnection();         
+            //Task.Factory.StartNew(sqlConnection.OpenConnection);
+            //sqlConnection.OpenConnection();
+            sqlConnection.OpenConnectionAsync();
         }
         private bool CanSQLConnectionSetExecute(object p) => true;
 
