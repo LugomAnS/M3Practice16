@@ -6,6 +6,9 @@ namespace DataProvider
     public class SQLConnectionDB
     {
         private SqlConnectionStringBuilder connString;
+        public string SQLConnectionString { get => connString.ConnectionString.ToString(); }
+        
+        
         private SqlConnection connection;
 
         /// <summary>

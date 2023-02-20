@@ -21,6 +21,10 @@ namespace AdoNet.ViewModels
         private SQLConnectionDB sqlConnection;
         #endregion
 
+        #region SQL строка соединения
+        public string SQLConnectionString { get; set; }
+        #endregion
+
         #region Статус Access соединения
         private string accessConnectionStatus;
         public string AccessConnectionStatus
@@ -34,6 +38,10 @@ namespace AdoNet.ViewModels
         private AccessConnectionDB accessConnection;
         #endregion
 
+        #region Access строка соединение
+        public string AccessConnectionString { get; set; }
+        #endregion
+
         #endregion
 
         public MainWindowViewModel()
@@ -42,9 +50,11 @@ namespace AdoNet.ViewModels
                                            CanSQLConnectionSetExecute);
 
             sqlConnection = new SQLConnectionDB();
+            SQLConnectionString = sqlConnection.SQLConnectionString;
             sqlConnection.ConnectionState += SQLConnectionStatusChange;
 
             accessConnection = new AccessConnectionDB();
+            AccessConnectionString = accessConnection.AccessConnectionsString;
             accessConnection.ConnectionState += AccessConnectionStatusChange;
         }
 

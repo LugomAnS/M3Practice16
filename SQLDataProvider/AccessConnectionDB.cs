@@ -12,6 +12,9 @@ namespace DataProvider
     public class AccessConnectionDB
     {
         private OleDbConnectionStringBuilder connectionString;
+        public string AccessConnectionsString { get => connectionString.ConnectionString.ToString(); }
+        
+        
         private OleDbConnection dbConnection;
 
         public event Action<string> ConnectionState;
