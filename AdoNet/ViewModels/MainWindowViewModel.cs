@@ -21,6 +21,19 @@ namespace AdoNet.ViewModels
         private SQLConnectionDB sqlConnection;
         #endregion
 
+        #region Статус Access соединения
+        private string accessConnectionStatus;
+        public string AccessConnectionStatus
+        {
+            get => accessConnectionStatus;
+            set => Set(ref accessConnectionStatus, value);
+        }
+        #endregion
+
+        #region Access соединение
+        private AccessConnectionDB accessConnection;
+        #endregion
+
         #endregion
 
         public MainWindowViewModel()
@@ -30,11 +43,19 @@ namespace AdoNet.ViewModels
 
             sqlConnection = new SQLConnectionDB();
             sqlConnection.ConnectionState += SQLConnectionStatusChange;
+
+            accessConnection = new AccessConnectionDB();
+            accessConnection.ConnectionState += AccessConnectionStatusChange;
         }
 
         private void SQLConnectionStatusChange(string status)
         {
             SqlConnectionStatus = status;
+        }
+
+        private void AccessConnectionStatusChange(string status)
+        {
+            AccessConnectionStatus = status;
         }
 
         #region Команды
@@ -44,6 +65,7 @@ namespace AdoNet.ViewModels
         private void OnSQLConnectionSetExecute(object p)
         {
             sqlConnection.OpenConnectionAsync();
+            accessConnection.OpenConnectionAsync();
         }
         private bool CanSQLConnectionSetExecute(object p) => true;
 

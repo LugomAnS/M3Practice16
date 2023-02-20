@@ -11,12 +11,21 @@
     <Window.DataContext>
         <vm:MainWindowViewModel />
     </Window.DataContext>
-    <StackPanel Orientation="Vertical">
-        <Button Content="Установить соединение"
-                Command="{Binding SQLConnectionSet}"/>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Состояние" Margin="5"/>
-            <TextBlock Text="{Binding SqlConnectionStatus}" Margin="5"/>
+    <DockPanel LastChildFill="False">
+        <Button Content="Установить соединение" DockPanel.Dock="Top"
+                    Command="{Binding SQLConnectionSet}"/>
+        <StackPanel Orientation="Vertical" DockPanel.Dock="Bottom">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Состояние" Margin="5"/>
+                <TextBlock Text="{Binding SqlConnectionStatus}" Margin="5"/>
+            </StackPanel>
         </StackPanel>
-    </StackPanel>
+        <StackPanel Orientation="Vertical" DockPanel.Dock="Bottom">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Состояние" Margin="5"/>
+                <TextBlock Text="{Binding AccessConnectionStatus}" Margin="5"/>
+            </StackPanel>
+        </StackPanel>
+    </DockPanel>
+    
 </Window>
