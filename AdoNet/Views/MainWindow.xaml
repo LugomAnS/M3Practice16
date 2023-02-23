@@ -11,25 +11,46 @@
     <Window.DataContext>
         <vm:MainWindowViewModel />
     </Window.DataContext>
-    <DockPanel LastChildFill="False" Margin="5">
-        <Button Content="Установить соединение" DockPanel.Dock="Top"
+    
+    <DockPanel LastChildFill="True" Margin="5">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <Button Content="Проверить соединение" DockPanel.Dock="Top" Margin="5"
                     Command="{Binding SQLConnectionSet}"/>
-        
-        <StackPanel Orientation="Vertical" DockPanel.Dock="Bottom">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Состояние" Margin="5"/>
-                <TextBlock Text="{Binding SqlConnectionStatus}" Margin="5"/>
-            </StackPanel>
-            <TextBlock Text="{Binding SQLConnectionString}" Margin="5,0,0,0"/>
         </StackPanel>
-        <StackPanel Orientation="Vertical" DockPanel.Dock="Bottom">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Состояние" Margin="5"/>
-                <TextBlock Text="{Binding AccessConnectionStatus}" Margin="5"/>
+        <GroupBox Header="Состояние подключений" DockPanel.Dock="Bottom">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Состояние SQL соединения" Margin="5"/>
+                        <TextBlock Text="{Binding SqlConnectionStatus}" Margin="5"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding SQLConnectionString}" Margin="5,0,0,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Состояние Access соединения" Margin="5"/>
+                        <TextBlock Text="{Binding AccessConnectionStatus}" Margin="5"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding AccessConnectionString}" Margin="5,0,0,0"/>
+                </StackPanel>
             </StackPanel>
-            <TextBlock Text="{Binding AccessConnectionString}" Margin="5,0,0,0"/>
-        </StackPanel>
-        
+        </GroupBox>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.5*"/>
+                <RowDefinition Height="0.5" />
+            </Grid.RowDefinitions>
+
+            <DataGrid Grid.Row="0">
+                
+            </DataGrid>
+
+            <DataGrid Grid.Row="1">
+                
+            </DataGrid>
+            
+        </Grid>
     </DockPanel>
     
 </Window>
