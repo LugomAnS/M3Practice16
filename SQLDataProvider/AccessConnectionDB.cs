@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DataProvider
 {
@@ -21,13 +22,17 @@ namespace DataProvider
 
         // Provider=Microsoft.ACE.OLEDB.12.0;
         // Data Source=F:\SkillboxUnityCourse\Module3\Practice16\AdoNet\AdoNet\bin\Debug\net7.0-windows\AccessDB.mdb
+        // Provider=Microsoft.ACE.OLEDB.12.0;
+        // Data Source = F:\SkillboxUnityCourse\Module3\Practice16\AdoNet\AdoNet\bin\Debug\net7.0-windows\AccessDB.accdb;
+        // Persist Security Info=True
 
         public AccessConnectionDB()
         {
             connectionString = new OleDbConnectionStringBuilder()
             {
                 Provider = "Microsoft.ACE.OLEDB.12.0",
-                DataSource = @"AccessDB.mdb"
+                DataSource = @"AccessDB.accdb",
+                PersistSecurityInfo = true
             };
         }
 
