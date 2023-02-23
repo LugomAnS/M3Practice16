@@ -11,4 +11,8 @@
     <ProjectReference Include="..\SQLDataProvider\DataProvider.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SQLScripts\" />
+  </ItemGroup>
+
 </Project>

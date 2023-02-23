@@ -62,7 +62,6 @@ namespace AdoNet.ViewModels
         {
             SqlConnectionStatus = status;
         }
-
         private void AccessConnectionStatusChange(string status)
         {
             AccessConnectionStatus = status;
