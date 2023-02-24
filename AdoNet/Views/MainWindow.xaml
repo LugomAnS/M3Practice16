@@ -14,8 +14,14 @@
     
     <DockPanel LastChildFill="True" Margin="5">
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-            <Button Content="Проверить соединение" DockPanel.Dock="Top" Margin="5"
+            <Button Content="Проверить соединение" Margin="5"
                     Command="{Binding SQLConnectionSet}"/>
+            <Button Content="Обновить данные" Margin="5" 
+                    Command="{Binding GetAllClientsCommand}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <TextBlock Text="Статус: "/>
+            <TextBlock Text="{Binding RequestStatus}" />
         </StackPanel>
         <GroupBox Header="Состояние подключений" DockPanel.Dock="Bottom">
             <StackPanel Orientation="Vertical">
@@ -42,8 +48,9 @@
                 <RowDefinition Height="0.5" />
             </Grid.RowDefinitions>
 
-            <DataGrid Grid.Row="0">
-                
+            <DataGrid Grid.Row="0" ItemsSource="{Binding Clients.DefaultView}"
+                      AutoGenerateColumns="true">
+              
             </DataGrid>
 
             <DataGrid Grid.Row="1">

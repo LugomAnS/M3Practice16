@@ -1,4 +1,8 @@
-﻿using System.Windows.Input;
+﻿using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 using AdoNet.Infrastructure;
 using DataProvider;
 
@@ -42,12 +46,32 @@ namespace AdoNet.ViewModels
         public string AccessConnectionString { get; set; }
         #endregion
 
+
+        #region Данные о клиентах
+        private DataTable? clients;
+        public DataTable? Clients
+        {
+            get => clients;
+            set => Set(ref clients, value);
+        }
+        #endregion
+
+        #region Статус обработки запроса
+        private string requestStatus;
+        public string RequestStatus
+        {
+            get => requestStatus;
+            set => Set(ref requestStatus, value);
+        }
+        #endregion
         #endregion
 
         public MainWindowViewModel()
         {
             SQLConnectionSet = new Command(OnSQLConnectionSetExecute,
                                            CanSQLConnectionSetExecute);
+
+            GetAllClientsCommand = new Command(OnGetAllClientsCommandExecute, null);
 
             sqlConnection = new SQLConnectionDB();
             SQLConnectionString = sqlConnection.SQLConnectionString;
@@ -56,6 +80,7 @@ namespace AdoNet.ViewModels
             accessConnection = new AccessConnectionDB();
             AccessConnectionString = accessConnection.AccessConnectionsString;
             accessConnection.ConnectionState += AccessConnectionStatusChange;
+
         }
 
         private void SQLConnectionStatusChange(string status)
@@ -80,6 +105,15 @@ namespace AdoNet.ViewModels
 
         #endregion
 
+        #region Получить клиентов
+        public ICommand GetAllClientsCommand { get; }
+        private void OnGetAllClientsCommandExecute(object p)
+        {
+             Clients = sqlConnection.GetClients();
+        }
+        #endregion
+
         #endregion
     }
+
 }
