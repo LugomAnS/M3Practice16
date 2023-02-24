@@ -56,6 +56,19 @@ namespace AdoNet.ViewModels
         }
         #endregion
 
+        #region Выбранный клиент
+        private DataRowView selectedClient;
+        public DataRowView SelectedClient
+        {
+            get => selectedClient;
+            set
+            {
+                Set(ref selectedClient, value);
+                GetSelectedClientPurchases(value.Row.ItemArray[5].ToString());
+            }
+        }
+        #endregion
+
         #region Данные о покупках
         private DataTable purchases;
         public DataTable Purchases
@@ -80,7 +93,7 @@ namespace AdoNet.ViewModels
             SQLConnectionSet = new Command(OnSQLConnectionSetExecute,
                                            CanSQLConnectionSetExecute);
 
-            GetAllClientsCommand = new Command(OnGetAllClientsCommandExecute, null);
+            GetAllClientsCommand = new Command(OnGetAllClientsCommandExecute);
 
             sqlConnection = new SQLConnectionDB();
             SQLConnectionString = sqlConnection.SQLConnectionString;
@@ -99,6 +112,16 @@ namespace AdoNet.ViewModels
         private void AccessConnectionStatusChange(string status)
         {
             AccessConnectionStatus = status;
+        }
+        private void GetSelectedClientPurchases(string clientEmail)
+        {
+            if (clientEmail == null)
+            {
+                Purchases = null;
+                return;
+            }
+
+            Purchases = accessConnection.GetClientPurchases(clientEmail); 
         }
 
         #region Команды
@@ -119,7 +142,6 @@ namespace AdoNet.ViewModels
         private void OnGetAllClientsCommandExecute(object p)
         {
             Clients = sqlConnection.GetClients();
-            Purchases = accessConnection.GetAllPurchases();
         }
         #endregion
 

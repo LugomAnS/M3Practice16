@@ -37,14 +37,18 @@ namespace DataProvider
                 PersistSecurityInfo = true
             };
 
-            InitializingDBAdapter();
-        }
-
-        private void InitializingDBAdapter()
-        {
             accessData = new OleDbDataAdapter();
+        }
+        
+        private string SelectAllPurchasesCommand()
+        {
+            return @"SELECT * FROM Purchases";
+        }
+        private void SelectCurentClientPurchasesCommand(string email, OleDbConnection con)
+        {
+            string sql = @$"SELECT * FROM Purchases WHERE Purchases.eMail = '{email}'";
 
-            //accessData.SelectCommand = new OleDbCommand("SELECT * FROM Purchases", dbConnection);
+            accessData.SelectCommand = new OleDbCommand(sql, con);
         }
 
         #region проверка соединения
@@ -80,10 +84,24 @@ namespace DataProvider
             DataTable dt = new DataTable();
             using (dbConnection = new OleDbConnection(connectionString.ConnectionString))
             {
-                accessData.SelectCommand = new OleDbCommand(@"SELECT * FROM Purchases", dbConnection);
-
+                accessData.SelectCommand = new OleDbCommand(SelectAllPurchasesCommand(), dbConnection);
                 accessData.Fill(dt);
             }
+            return dt;
+        }
+
+        #endregion
+
+        #region Получить записи о покупках по клиенту
+        public DataTable GetClientPurchases(string clientEmail)
+        {
+            DataTable dt = new DataTable();
+            using (dbConnection = new OleDbConnection(connectionString.ConnectionString))
+            {
+                SelectCurentClientPurchasesCommand(clientEmail, dbConnection);
+                accessData.Fill(dt);
+            }
+
             return dt;
         }
 
