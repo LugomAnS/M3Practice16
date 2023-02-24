@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AdoNet"
         xmlns:vm="clr-namespace:AdoNet.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="500" Width="800"
         WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vm:MainWindowViewModel />
@@ -47,17 +47,64 @@
                 <RowDefinition Height="0.5*"/>
                 <RowDefinition Height="0.5*" />
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.6*"/>
+                <ColumnDefinition Width="0.4*"/>
+            </Grid.ColumnDefinitions>
 
-            <DataGrid Grid.Row="0" ItemsSource="{Binding Clients.DefaultView}"
+            <DataGrid Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Clients.DefaultView}"
                       AutoGenerateColumns="true"
-                      SelectedItem="{Binding SelectedClient}">
+                      SelectedItem="{Binding SelectedClient}"
+                      CanUserAddRows="False">
               
             </DataGrid>
 
-            <DataGrid Grid.Row="1" ItemsSource="{Binding Purchases.DefaultView}" 
-                      AutoGenerateColumns="True">
+            <DataGrid Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Purchases.DefaultView}" 
+                      AutoGenerateColumns="True"
+                      CanUserAddRows="False">
                 
             </DataGrid>
+
+            <GroupBox Grid.Row="0" Grid.Column="1" Header="Новый клиент">
+                <DockPanel>
+                    <Button DockPanel.Dock="Bottom" Content="Добавить клиента" HorizontalAlignment="Center"/>
+                    
+                    <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Margin="1">
+                        <TextBlock Text="Фамилия: " HorizontalAlignment="Right" Margin="1"/>
+                        <TextBlock Text="Имя: " HorizontalAlignment="Right" Margin="1"/>
+                        <TextBlock Text="Отчество: " HorizontalAlignment="Right" Margin="1"/>
+                        <TextBlock Text="Почта: " HorizontalAlignment="Right" Margin="1"/>
+                        <TextBlock Text="Телефон: " HorizontalAlignment="Right" Margin="1"/>
+                    </StackPanel>
+                    
+                    <StackPanel Orientation="Vertical">
+                        <TextBox />
+                        <TextBox />
+                        <TextBox />
+                        <TextBox />
+                        <TextBox />
+                    </StackPanel>
+
+                </DockPanel>
+            </GroupBox>
+
+            <GroupBox Grid.Row="1" Grid.Column="1" Header="Новая покупка">
+                <DockPanel>
+                    <Button DockPanel.Dock="Bottom" Content="Добавить покупку" HorizontalAlignment="Center"/>
+
+                    <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Margin="1">
+                        <TextBlock Text="Почта: " HorizontalAlignment="Right" Margin="1"/>
+                        <TextBlock Text="Код товара: " HorizontalAlignment="Right" Margin="1"/>
+                        <TextBlock Text="Наименование: " HorizontalAlignment="Right" Margin="1"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Margin="1"/>
+                        <TextBox />
+                        <TextBox />
+                    </StackPanel>
+                </DockPanel>
+            </GroupBox>
             
         </Grid>
     </DockPanel>

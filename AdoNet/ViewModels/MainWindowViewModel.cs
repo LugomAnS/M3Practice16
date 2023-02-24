@@ -64,7 +64,15 @@ namespace AdoNet.ViewModels
             set
             {
                 Set(ref selectedClient, value);
-                GetSelectedClientPurchases(value.Row.ItemArray[5].ToString());
+                if (value != null)
+                {
+                    GetSelectedClientPurchases(value.Row.ItemArray[5].ToString());
+                }
+                if (value == null)
+                {
+                    Purchases = null;
+                }
+                
             }
         }
         #endregion
@@ -93,7 +101,8 @@ namespace AdoNet.ViewModels
             SQLConnectionSet = new Command(OnSQLConnectionSetExecute,
                                            CanSQLConnectionSetExecute);
 
-            GetAllClientsCommand = new Command(OnGetAllClientsCommandExecute);
+            GetAllClientsCommand = new Command(OnGetAllClientsCommandExecute,
+                                               CanGetAllClientsCommandExecute);
 
             sqlConnection = new SQLConnectionDB();
             SQLConnectionString = sqlConnection.SQLConnectionString;
@@ -115,12 +124,6 @@ namespace AdoNet.ViewModels
         }
         private void GetSelectedClientPurchases(string clientEmail)
         {
-            if (clientEmail == null)
-            {
-                Purchases = null;
-                return;
-            }
-
             Purchases = accessConnection.GetClientPurchases(clientEmail); 
         }
 
@@ -143,6 +146,9 @@ namespace AdoNet.ViewModels
         {
             Clients = sqlConnection.GetClients();
         }
+        private bool CanGetAllClientsCommandExecute(object p)
+            => SqlConnectionStatus == ConnectionState.Closed.ToString() || SqlConnectionStatus == null;
+
         #endregion
 
         #endregion
