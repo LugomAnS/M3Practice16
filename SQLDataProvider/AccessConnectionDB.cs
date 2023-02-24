@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -13,6 +14,7 @@ namespace DataProvider
     public class AccessConnectionDB
     {
         private OleDbConnectionStringBuilder connectionString;
+        private OleDbDataAdapter accessData;
         public string AccessConnectionsString { get => connectionString.ConnectionString.ToString(); }
         
         
@@ -34,8 +36,18 @@ namespace DataProvider
                 DataSource = @"AccessDB.accdb",
                 PersistSecurityInfo = true
             };
+
+            InitializingDBAdapter();
         }
 
+        private void InitializingDBAdapter()
+        {
+            accessData = new OleDbDataAdapter();
+
+            //accessData.SelectCommand = new OleDbCommand("SELECT * FROM Purchases", dbConnection);
+        }
+
+        #region проверка соединения
         public void OpenConnection()
         {
             using (dbConnection = new OleDbConnection(connectionString.ToString()))
@@ -59,5 +71,22 @@ namespace DataProvider
         {
             await Task.Factory.StartNew(OpenConnection);
         }
+
+        #endregion
+
+        #region Получить все записи покупок
+        public DataTable GetAllPurchases()
+        {
+            DataTable dt = new DataTable();
+            using (dbConnection = new OleDbConnection(connectionString.ConnectionString))
+            {
+                accessData.SelectCommand = new OleDbCommand(@"SELECT * FROM Purchases", dbConnection);
+
+                accessData.Fill(dt);
+            }
+            return dt;
+        }
+
+        #endregion
     }
 }

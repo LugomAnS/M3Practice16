@@ -9,8 +9,7 @@ namespace DataProvider
         private SqlConnectionStringBuilder connString;
         private SqlDataAdapter sqlData;
         public string SQLConnectionString { get => connString.ConnectionString.ToString(); }
-        
-        
+
         private SqlConnection connection;
 
         /// <summary>
@@ -67,6 +66,8 @@ namespace DataProvider
             await Task.Factory.StartNew(OpenConnection);
         }
 
+
+        #region Получить всех клиентов
         public DataTable GetClients()
         {
             DataTable dt = new DataTable();
@@ -93,6 +94,7 @@ namespace DataProvider
         {
             return await Task<DataTable>.Factory.StartNew(this.GetClients);
         }
+        #endregion
 
     }
 }

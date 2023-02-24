@@ -48,11 +48,20 @@ namespace AdoNet.ViewModels
 
 
         #region Данные о клиентах
-        private DataTable? clients;
-        public DataTable? Clients
+        private DataTable clients;
+        public DataTable Clients
         {
             get => clients;
             set => Set(ref clients, value);
+        }
+        #endregion
+
+        #region Данные о покупках
+        private DataTable purchases;
+        public DataTable Purchases
+        {
+            get => purchases;
+            set => Set(ref purchases, value);
         }
         #endregion
 
@@ -109,7 +118,8 @@ namespace AdoNet.ViewModels
         public ICommand GetAllClientsCommand { get; }
         private void OnGetAllClientsCommandExecute(object p)
         {
-             Clients = sqlConnection.GetClients();
+            Clients = sqlConnection.GetClients();
+            Purchases = accessConnection.GetAllPurchases();
         }
         #endregion
 
