@@ -104,7 +104,9 @@ namespace AdoNet.ViewModels
             GetAllClientsCommand = new Command(OnGetAllClientsCommandExecute,
                                                CanGetAllClientsCommandExecute);
 
-            TestCommand = new Command(OnTestCommandExecute, null);
+            CellEditEndCommand = new Command(OnCellEditEndCommandExcute, null);
+
+            ClientCellChangedCommand = new Command(OnClientCellChangedCommandExecute, null);
 
             sqlConnection = new SQLConnectionDB();
             SQLConnectionString = sqlConnection.SQLConnectionString;
@@ -153,12 +155,35 @@ namespace AdoNet.ViewModels
 
         #endregion
 
-        public ICommand TestCommand { get; }
+        #endregion
 
-        private void OnTestCommandExecute(object p)
+        #region Prism Commands as Event
+
+        #region Изменение клиента по завершении редактирования ячейки
+        public ICommand CellEditEndCommand { get; }
+
+        private void OnCellEditEndCommandExcute(object p)
         {
-            MessageBox.Show("Working");
+            SelectedClient.Row.BeginEdit();
+            Clients = sqlConnection.UpdateClientInfo(Clients);
         }
+
+        #endregion
+
+        #region Изменение клиента при смене ячейки
+        public ICommand ClientCellChangedCommand { get; }
+
+        private void OnClientCellChangedCommandExecute(object p)
+        {
+            if (SelectedClient == null)
+            {
+                return;
+            }
+            SelectedClient.Row.EndEdit();
+            Clients = sqlConnection.UpdateClientInfo(Clients);
+        }
+
+        #endregion
 
         #endregion
     }

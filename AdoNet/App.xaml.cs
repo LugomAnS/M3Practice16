@@ -19,7 +19,7 @@ namespace AdoNet
     {
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            // register other needed services here
+            // DI пока не умею реализовывать
         }
 
         protected override Window CreateShell()

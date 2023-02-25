@@ -61,7 +61,10 @@
                       >
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="CellEditEnding">
-                        <prismI:InvokeCommandAction Command="{Binding TestCommand}" />
+                        <prismI:InvokeCommandAction Command="{Binding CellEditEndCommand}" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="CurrentCellChanged">
+                        <prismI:InvokeCommandAction Command="{Binding ClientCellChangedCommand}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
               
