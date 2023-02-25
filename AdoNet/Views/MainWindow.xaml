@@ -20,6 +20,9 @@
                     Command="{Binding SQLConnectionSet}"/>
             <Button Content="Обновить данные" Margin="5" 
                     Command="{Binding GetAllClientsCommand}"/>
+            <Button Content="Удалить клиента" Margin="5"
+                    Command="{Binding DeleteClientRecordCommand}"
+                    CommandParameter="{Binding SelectedClient}" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
             <TextBlock Text="Статус: "/>
@@ -57,8 +60,13 @@
             <DataGrid Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Clients.DefaultView}"
                       AutoGenerateColumns="true"
                       SelectedItem="{Binding SelectedClient}"
-                      CanUserAddRows="False"
-                      >
+                      CanUserAddRows="False">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Удалить" Command="{Binding DeleteClientRecordCommand}"
+                                  CommandParameter="{Binding SelectedClient}"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="CellEditEnding">
                         <prismI:InvokeCommandAction Command="{Binding CellEditEndCommand}" />
@@ -66,6 +74,7 @@
                     <i:EventTrigger EventName="CurrentCellChanged">
                         <prismI:InvokeCommandAction Command="{Binding ClientCellChangedCommand}" />
                     </i:EventTrigger>
+                    
                 </i:Interaction.Triggers>
               
             </DataGrid>

@@ -49,7 +49,7 @@ namespace DataProvider
                            eMail = @eMail
                         WHERE id = @id";
             sqlData.UpdateCommand = new SqlCommand(sql, connection);
-            sqlData.UpdateCommand.Parameters.Add("@id", SqlDbType.Int, 0, "id").SourceVersion = DataRowVersion.Original;
+            sqlData.UpdateCommand.Parameters.Add("@id", SqlDbType.Int, 4, "id").SourceVersion = DataRowVersion.Original;
             sqlData.UpdateCommand.Parameters.Add("@clientName", SqlDbType.NVarChar, 15, "clientName");
             sqlData.UpdateCommand.Parameters.Add("@clientSurname", SqlDbType.NVarChar, 15, "clientSurname");
             sqlData.UpdateCommand.Parameters.Add("@clientPatronymic", SqlDbType.NVarChar, 15, "clientPatronymic");
@@ -64,12 +64,20 @@ namespace DataProvider
                                 VALUES (@clientName, @clientSurname, @clientPatronymic, @phone, @eMail)
                            SET @id = @@IDENTITY;";
             sqlData.InsertCommand = new SqlCommand(sql, connection);
-            sqlData.InsertCommand.Parameters.Add("@id", SqlDbType.Int, 0, "id").SourceVersion = DataRowVersion.Original;
+            sqlData.InsertCommand.Parameters.Add("@id", SqlDbType.Int, 4, "id").SourceVersion = DataRowVersion.Original;
             sqlData.InsertCommand.Parameters.Add("@clientName", SqlDbType.NVarChar, 15, "clientName");
             sqlData.InsertCommand.Parameters.Add("@clientSurname", SqlDbType.NVarChar, 15, "clientSurname");
             sqlData.InsertCommand.Parameters.Add("@clientPatronymic", SqlDbType.NVarChar, 15, "clientPatronymic");
             sqlData.InsertCommand.Parameters.Add("@phone", SqlDbType.NVarChar, 15, "phone");
             sqlData.InsertCommand.Parameters.Add("@eMail", SqlDbType.NVarChar, 20, "eMail");
+
+            #endregion
+
+            #region DELETE
+            
+            sql = @"DELETE FROM Clients WHERE id = @id";
+            sqlData.DeleteCommand = new SqlCommand(sql, connection);
+            sqlData.DeleteCommand.Parameters.Add("@id", SqlDbType.Int, 4, "id").SourceVersion = DataRowVersion.Original;
 
             #endregion
 
@@ -181,6 +189,55 @@ namespace DataProvider
         public async void AddNewClientRecordAsync(object clients)
         {
             await Task.Factory.StartNew(AddNewClientRecord, clients);
+        }
+
+        #endregion
+
+        #region Удалить клиента
+        public void DeleteClientRecord(object clients)
+        {
+            try
+            {
+                connection.Open();
+                sqlData.Update(clients as DataTable);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        #endregion
+
+        #region Обновление информации в БД
+
+        public void UpdateDBInformation(object clients)
+        {
+            try
+            {
+                connection.Open();
+                sqlData.Update(clients as DataTable);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+        /// <summary>
+        /// Запись произведенных изменений в базу данных
+        /// </summary>
+        /// <param name="clients">DataTable с изменениями</param>
+        public async void UpdateDBInformationAsync(object clients)
+        {
+            await Task.Factory.StartNew(UpdateClientInfo, clients);
         }
 
         #endregion

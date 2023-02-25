@@ -121,6 +121,9 @@ namespace AdoNet.ViewModels
 
             ClientCellChangedCommand = new Command(OnClientCellChangedCommandExecute, null);
 
+            DeleteClientRecordCommand = new Command(OnDeleteClientRecordExecute,
+                                                    CanDeleteClientRecordCommandExecute);
+
             sqlConnection = new SQLConnectionDB();
             SQLConnectionString = sqlConnection.SQLConnectionString;
             sqlConnection.ConnectionState += SQLConnectionStatusChange;
@@ -142,6 +145,12 @@ namespace AdoNet.ViewModels
         private void GetSelectedClientPurchases(string clientEmail)
         {
             Purchases = accessConnection.GetClientPurchases(clientEmail); 
+        }
+
+        private void DeleteClientRecord()
+        {
+            SelectedClient.Row.Delete();
+            sqlConnection.UpdateDBInformationAsync(Clients);
         }
 
         #region Команды
@@ -202,6 +211,18 @@ namespace AdoNet.ViewModels
             return true;
         }
 
+        #endregion
+
+        #region Удалить клиента
+        public ICommand DeleteClientRecordCommand { get; }
+
+        private void OnDeleteClientRecordExecute(object p)
+        {
+            ((DataRowView)p).Row.Delete();
+            sqlConnection.UpdateClientInfoAsync(Clients);
+        }
+
+        private bool CanDeleteClientRecordCommandExecute(object p) => p != null;
         #endregion
 
         #endregion
