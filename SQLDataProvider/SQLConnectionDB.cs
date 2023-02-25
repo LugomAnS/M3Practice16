@@ -27,10 +27,10 @@ namespace DataProvider
             };
             connection = new SqlConnection(connString.ConnectionString);
             connection.StateChange += Connection_StateChange;
-            InititialSQLAdapter();
+            InitSQLAdapter();
         }
 
-        private void InititialSQLAdapter()
+        private void InitSQLAdapter()
         {
             sqlData = new SqlDataAdapter();
 
@@ -119,12 +119,12 @@ namespace DataProvider
 
         #region Изменение клиента
 
-        public DataTable UpdateClientInfo(DataTable clientsData)
+        public void UpdateClientInfo(object clientsData)
         {
             try
             {
                 connection.Open();
-                sqlData.Update(clientsData);
+                sqlData.Update(clientsData as DataTable);
             }
             catch (Exception e)
             {
@@ -134,8 +134,11 @@ namespace DataProvider
             {
                 connection.Close();
             }
+        }
 
-            return clientsData;
+        public async void UpdateClientInfoAsync(object clientData)
+        {
+            await Task.Factory.StartNew(UpdateClientInfo, clientData);
         }
 
         #endregion

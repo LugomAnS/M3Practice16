@@ -165,7 +165,7 @@ namespace AdoNet.ViewModels
         private void OnCellEditEndCommandExcute(object p)
         {
             SelectedClient.Row.BeginEdit();
-            Clients = sqlConnection.UpdateClientInfo(Clients);
+            sqlConnection.UpdateClientInfoAsync(Clients);
         }
 
         #endregion
@@ -180,7 +180,7 @@ namespace AdoNet.ViewModels
                 return;
             }
             SelectedClient.Row.EndEdit();
-            Clients = sqlConnection.UpdateClientInfo(Clients);
+            sqlConnection.UpdateClientInfoAsync(Clients);
         }
 
         #endregion
