@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -253,7 +255,8 @@ namespace AdoNet.ViewModels
             Purchases.Rows.Add(purchase);
             accessConnection.AddNewPurchase(Purchases);
         }
-        private bool CanAddNewPurchaseExecute(object p) => p != null;
+        private bool CanAddNewPurchaseExecute(object p) 
+            => (p != null) && (!String.IsNullOrEmpty(ItemCode)) && (ItemCode.All(c => Char.IsDigit(c)));
 
         #endregion
 
