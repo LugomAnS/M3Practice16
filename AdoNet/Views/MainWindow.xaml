@@ -114,13 +114,15 @@
                     <Button DockPanel.Dock="Bottom" Content="Добавить покупку" HorizontalAlignment="Center"/>
 
                     <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Margin="1">
+                        <TextBlock Text="Клиент: " HorizontalAlignment="Right" Margin="1" />
                         <TextBlock Text="Почта: " HorizontalAlignment="Right" Margin="1"/>
                         <TextBlock Text="Код товара: " HorizontalAlignment="Right" Margin="1"/>
                         <TextBlock Text="Наименование: " HorizontalAlignment="Right" Margin="1"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Margin="1"/>
+                        <TextBlock Margin="1" Text="{Binding SelectedClient.Row.ItemArray[2]}" />
+                        <TextBlock Margin="1" Text="{Binding SelectedClient.Row.ItemArray[5]}"/>
                         <TextBox />
                         <TextBox />
                     </StackPanel>

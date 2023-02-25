@@ -203,7 +203,7 @@ namespace AdoNet.ViewModels
 
             tmpTable.Rows.Add(client);
 
-            sqlConnection.AddNewClientRecordAsync(tmpTable);
+            sqlConnection.UpdateDBInformationAsync(tmpTable);
         }
 
         private bool CanAddNewClientCommandExecute(object p)
@@ -219,7 +219,7 @@ namespace AdoNet.ViewModels
         private void OnDeleteClientRecordExecute(object p)
         {
             ((DataRowView)p).Row.Delete();
-            sqlConnection.UpdateClientInfoAsync(Clients);
+            sqlConnection.UpdateDBInformationAsync(Clients);
         }
 
         private bool CanDeleteClientRecordCommandExecute(object p) => p != null;
@@ -235,7 +235,7 @@ namespace AdoNet.ViewModels
         private void OnCellEditEndCommandExcute(object p)
         {
             SelectedClient.Row.BeginEdit();
-            sqlConnection.UpdateClientInfoAsync(Clients);
+            sqlConnection.UpdateDBInformationAsync(Clients);
         }
 
         #endregion
@@ -250,7 +250,7 @@ namespace AdoNet.ViewModels
                 return;
             }
             SelectedClient.Row.EndEdit();
-            sqlConnection.UpdateClientInfoAsync(Clients);
+            sqlConnection.UpdateDBInformationAsync(Clients);
         }
 
         #endregion

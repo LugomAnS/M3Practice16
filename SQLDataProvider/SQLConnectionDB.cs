@@ -142,77 +142,6 @@ namespace DataProvider
         }
         #endregion
 
-        #region Изменение клиента
-
-        public void UpdateClientInfo(object clientsData)
-        {
-            try
-            {
-                connection.Open();
-                sqlData.Update(clientsData as DataTable);
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-            }
-            finally
-            {
-                connection.Close();
-            }
-        }
-
-        public async void UpdateClientInfoAsync(object clientData)
-        {
-            await Task.Factory.StartNew(UpdateClientInfo, clientData);
-        }
-
-        #endregion
-
-        #region Добавление клиента
-        public void AddNewClientRecord(object clients)
-        {
-            try
-            {
-                connection.Open();
-                sqlData.Update(clients as DataTable);
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-            }
-            finally
-            {
-                connection.Close();
-            }
-        }
-
-        public async void AddNewClientRecordAsync(object clients)
-        {
-            await Task.Factory.StartNew(AddNewClientRecord, clients);
-        }
-
-        #endregion
-
-        #region Удалить клиента
-        public void DeleteClientRecord(object clients)
-        {
-            try
-            {
-                connection.Open();
-                sqlData.Update(clients as DataTable);
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-            }
-            finally
-            {
-                connection.Close();
-            }
-        }
-
-        #endregion
-
         #region Обновление информации в БД
 
         public void UpdateDBInformation(object clients)
@@ -237,7 +166,7 @@ namespace DataProvider
         /// <param name="clients">DataTable с изменениями</param>
         public async void UpdateDBInformationAsync(object clients)
         {
-            await Task.Factory.StartNew(UpdateClientInfo, clients);
+            await Task.Factory.StartNew(UpdateDBInformation, clients);
         }
 
         #endregion
