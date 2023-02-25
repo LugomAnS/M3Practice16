@@ -78,7 +78,8 @@
 
             <GroupBox Grid.Row="0" Grid.Column="1" Header="Новый клиент">
                 <DockPanel>
-                    <Button DockPanel.Dock="Bottom" Content="Добавить клиента" HorizontalAlignment="Center"/>
+                    <Button DockPanel.Dock="Bottom" Content="Добавить клиента" HorizontalAlignment="Center"
+                            Command="{Binding AddNewClientCommand}"/>
                     
                     <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Margin="1">
                         <TextBlock Text="Фамилия: " HorizontalAlignment="Right" Margin="1"/>
@@ -87,13 +88,13 @@
                         <TextBlock Text="Почта: " HorizontalAlignment="Right" Margin="1"/>
                         <TextBlock Text="Телефон: " HorizontalAlignment="Right" Margin="1"/>
                     </StackPanel>
-                    
-                    <StackPanel Orientation="Vertical">
-                        <TextBox />
-                        <TextBox />
-                        <TextBox />
-                        <TextBox />
-                        <TextBox />
+
+                    <StackPanel Orientation="Vertical" DataContext="{Binding NewClient}">
+                        <TextBox Text="{Binding Surname, UpdateSourceTrigger=PropertyChanged ,Mode=TwoWay}"/>
+                        <TextBox Text="{Binding Name}"/>
+                        <TextBox Text="{Binding Patronymic}"/>
+                        <TextBox Text="{Binding Email}"/>
+                        <TextBox Text="{Binding Phone}"/>
                     </StackPanel>
 
                 </DockPanel>

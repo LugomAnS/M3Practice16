@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using AdoNet.Infrastructure;
+using AdoNet.Models;
 using DataProvider;
 
 namespace AdoNet.ViewModels
@@ -77,6 +78,15 @@ namespace AdoNet.ViewModels
         }
         #endregion
 
+        #region Новый клиент
+        private Client newClient = new Client();
+        public Client NewClient
+        {
+            get => newClient;
+            set => Set(ref newClient, value);
+        }
+        #endregion
+
         #region Данные о покупках
         private DataTable purchases;
         public DataTable Purchases
@@ -103,6 +113,9 @@ namespace AdoNet.ViewModels
 
             GetAllClientsCommand = new Command(OnGetAllClientsCommandExecute,
                                                CanGetAllClientsCommandExecute);
+
+            AddNewClientCommand = new Command(OnAddNewClientCommandExecute,
+                                              CanAddNewClientCommandExecute);
 
             CellEditEndCommand = new Command(OnCellEditEndCommandExcute, null);
 
@@ -152,6 +165,42 @@ namespace AdoNet.ViewModels
         }
         private bool CanGetAllClientsCommandExecute(object p)
             => SqlConnectionStatus == ConnectionState.Closed.ToString() || SqlConnectionStatus == null;
+
+        #endregion
+
+        #region Добавить клиента
+        public ICommand AddNewClientCommand { get; }
+
+        private void OnAddNewClientCommandExecute(object p)
+        {
+            DataTable tmpTable;
+
+            if (Clients == null)
+            {
+                tmpTable = sqlConnection.GetClients();
+            }
+            else
+            {
+                tmpTable = Clients;
+            }
+
+            // Плохое решение, при изменении структуры таблица придеться дописывать
+            DataRow client = tmpTable.NewRow();
+            client[1] = NewClient.Name;
+            client[2] = NewClient.Surname;
+            client[3] = NewClient.Patronymic;
+            client[4] = NewClient.Phone;
+            client[5] = NewClient.Email;
+
+            tmpTable.Rows.Add(client);
+
+            sqlConnection.AddNewClientRecordAsync(tmpTable);
+        }
+
+        private bool CanAddNewClientCommandExecute(object p)
+        {
+            return true;
+        }
 
         #endregion
 

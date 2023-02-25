@@ -40,6 +40,7 @@ namespace DataProvider
             #endregion
 
             #region UPDATE
+
             sql = @"UPDATE Clients SET
                            clientName = @clientName,
                            clientSurname = @clientSurname,
@@ -54,6 +55,22 @@ namespace DataProvider
             sqlData.UpdateCommand.Parameters.Add("@clientPatronymic", SqlDbType.NVarChar, 15, "clientPatronymic");
             sqlData.UpdateCommand.Parameters.Add("@phone", SqlDbType.NVarChar, 15, "phone");
             sqlData.UpdateCommand.Parameters.Add("@eMail", SqlDbType.NVarChar, 20, "eMail");
+
+            #endregion
+
+            #region INSERT
+
+            sql = @"INSERT INTO Clients (clientName, clientSurname, clientPatronymic, phone, eMail)
+                                VALUES (@clientName, @clientSurname, @clientPatronymic, @phone, @eMail)
+                           SET @id = @@IDENTITY;";
+            sqlData.InsertCommand = new SqlCommand(sql, connection);
+            sqlData.InsertCommand.Parameters.Add("@id", SqlDbType.Int, 0, "id").SourceVersion = DataRowVersion.Original;
+            sqlData.InsertCommand.Parameters.Add("@clientName", SqlDbType.NVarChar, 15, "clientName");
+            sqlData.InsertCommand.Parameters.Add("@clientSurname", SqlDbType.NVarChar, 15, "clientSurname");
+            sqlData.InsertCommand.Parameters.Add("@clientPatronymic", SqlDbType.NVarChar, 15, "clientPatronymic");
+            sqlData.InsertCommand.Parameters.Add("@phone", SqlDbType.NVarChar, 15, "phone");
+            sqlData.InsertCommand.Parameters.Add("@eMail", SqlDbType.NVarChar, 20, "eMail");
+
             #endregion
 
         }
@@ -139,6 +156,31 @@ namespace DataProvider
         public async void UpdateClientInfoAsync(object clientData)
         {
             await Task.Factory.StartNew(UpdateClientInfo, clientData);
+        }
+
+        #endregion
+
+        #region Добавление клиента
+        public void AddNewClientRecord(object clients)
+        {
+            try
+            {
+                connection.Open();
+                sqlData.Update(clients as DataTable);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public async void AddNewClientRecordAsync(object clients)
+        {
+            await Task.Factory.StartNew(AddNewClientRecord, clients);
         }
 
         #endregion
