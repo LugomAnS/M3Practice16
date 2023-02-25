@@ -104,6 +104,10 @@ namespace AdoNet.ViewModels
             GetAllClientsCommand = new Command(OnGetAllClientsCommandExecute,
                                                CanGetAllClientsCommandExecute);
 
+            CellEditEndCommand = new Command(OnCellEditEndCommandExcute, null);
+
+            ClientCellChangedCommand = new Command(OnClientCellChangedCommandExecute, null);
+
             sqlConnection = new SQLConnectionDB();
             SQLConnectionString = sqlConnection.SQLConnectionString;
             sqlConnection.ConnectionState += SQLConnectionStatusChange;
@@ -148,6 +152,36 @@ namespace AdoNet.ViewModels
         }
         private bool CanGetAllClientsCommandExecute(object p)
             => SqlConnectionStatus == ConnectionState.Closed.ToString() || SqlConnectionStatus == null;
+
+        #endregion
+
+        #endregion
+
+        #region Prism Commands as Event
+
+        #region Изменение клиента по завершении редактирования ячейки
+        public ICommand CellEditEndCommand { get; }
+
+        private void OnCellEditEndCommandExcute(object p)
+        {
+            SelectedClient.Row.BeginEdit();
+            Clients = sqlConnection.UpdateClientInfo(Clients);
+        }
+
+        #endregion
+
+        #region Изменение клиента при смене ячейки
+        public ICommand ClientCellChangedCommand { get; }
+
+        private void OnClientCellChangedCommandExecute(object p)
+        {
+            if (SelectedClient == null)
+            {
+                return;
+            }
+            SelectedClient.Row.EndEdit();
+            Clients = sqlConnection.UpdateClientInfo(Clients);
+        }
 
         #endregion
 

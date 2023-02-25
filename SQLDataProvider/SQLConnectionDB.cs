@@ -34,7 +34,28 @@ namespace DataProvider
         {
             sqlData = new SqlDataAdapter();
 
-            sqlData.SelectCommand = new SqlCommand(@"SELECT * FROM Clients", connection);
+            #region SELECT
+            string sql = @"SELECT * FROM Clients";
+            sqlData.SelectCommand = new SqlCommand(sql, connection);
+            #endregion
+
+            #region UPDATE
+            sql = @"UPDATE Clients SET
+                           clientName = @clientName,
+                           clientSurname = @clientSurname,
+                           clientPatronymic = @clientPatronymic,
+                           phone = @phone,
+                           eMail = @eMail
+                        WHERE id = @id";
+            sqlData.UpdateCommand = new SqlCommand(sql, connection);
+            sqlData.UpdateCommand.Parameters.Add("@id", SqlDbType.Int, 0, "id").SourceVersion = DataRowVersion.Original;
+            sqlData.UpdateCommand.Parameters.Add("@clientName", SqlDbType.NVarChar, 15, "clientName");
+            sqlData.UpdateCommand.Parameters.Add("@clientSurname", SqlDbType.NVarChar, 15, "clientSurname");
+            sqlData.UpdateCommand.Parameters.Add("@clientPatronymic", SqlDbType.NVarChar, 15, "clientPatronymic");
+            sqlData.UpdateCommand.Parameters.Add("@phone", SqlDbType.NVarChar, 15, "phone");
+            sqlData.UpdateCommand.Parameters.Add("@eMail", SqlDbType.NVarChar, 20, "eMail");
+            #endregion
+
         }
 
         // сообщаем подписчикам об изменении статуса соединения
@@ -94,6 +115,29 @@ namespace DataProvider
         {
             return await Task<DataTable>.Factory.StartNew(this.GetClients);
         }
+        #endregion
+
+        #region Изменение клиента
+
+        public DataTable UpdateClientInfo(DataTable clientsData)
+        {
+            try
+            {
+                connection.Open();
+                sqlData.Update(clientsData);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return clientsData;
+        }
+
         #endregion
 
     }
