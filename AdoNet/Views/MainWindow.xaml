@@ -6,6 +6,8 @@
         xmlns:local="clr-namespace:AdoNet"
         xmlns:vm="clr-namespace:AdoNet.ViewModels"
         mc:Ignorable="d"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:prismI="clr-namespace:Prism.Interactivity;assembly=Prism.Wpf"
         Title="MainWindow" Height="500" Width="800"
         WindowStartupLocation="CenterScreen">
     <Window.DataContext>
@@ -55,7 +57,13 @@
             <DataGrid Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Clients.DefaultView}"
                       AutoGenerateColumns="true"
                       SelectedItem="{Binding SelectedClient}"
-                      CanUserAddRows="False">
+                      CanUserAddRows="False"
+                      >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="CellEditEnding">
+                        <prismI:InvokeCommandAction Command="{Binding TestCommand}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
               
             </DataGrid>
 

@@ -104,6 +104,8 @@ namespace AdoNet.ViewModels
             GetAllClientsCommand = new Command(OnGetAllClientsCommandExecute,
                                                CanGetAllClientsCommandExecute);
 
+            TestCommand = new Command(OnTestCommandExecute, null);
+
             sqlConnection = new SQLConnectionDB();
             SQLConnectionString = sqlConnection.SQLConnectionString;
             sqlConnection.ConnectionState += SQLConnectionStatusChange;
@@ -150,6 +152,13 @@ namespace AdoNet.ViewModels
             => SqlConnectionStatus == ConnectionState.Closed.ToString() || SqlConnectionStatus == null;
 
         #endregion
+
+        public ICommand TestCommand { get; }
+
+        private void OnTestCommandExecute(object p)
+        {
+            MessageBox.Show("Working");
+        }
 
         #endregion
     }
