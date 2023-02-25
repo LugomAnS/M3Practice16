@@ -17,10 +17,15 @@ namespace DataProvider
         private OleDbDataAdapter accessData;
         public string AccessConnectionsString { get => connectionString.ConnectionString.ToString(); }
         
-        
         private OleDbConnection dbConnection;
 
         public event Action<string> ConnectionState;
+
+        #region Запросы к БД
+        private string selectAll = @"SELECT * FROM Purchases";
+
+        #endregion
+
 
         // Provider=Microsoft.ACE.OLEDB.12.0;
         // Data Source=F:\SkillboxUnityCourse\Module3\Practice16\AdoNet\AdoNet\bin\Debug\net7.0-windows\AccessDB.mdb
@@ -39,16 +44,23 @@ namespace DataProvider
 
             accessData = new OleDbDataAdapter();
         }
-        
-        private string SelectAllPurchasesCommand()
-        {
-            return @"SELECT * FROM Purchases";
-        }
+
         private void SelectCurentClientPurchasesCommand(string email, OleDbConnection con)
         {
             string sql = @$"SELECT * FROM Purchases WHERE Purchases.eMail = '{email}'";
 
             accessData.SelectCommand = new OleDbCommand(sql, con);
+        }
+
+        private void AddNewPurchaseCommand(OleDbConnection con)
+        {
+            string sql = @"INSERT INTO Purchases (eMail, itemCode, itemName)
+                                  VALUES (@eMail, @itemCode, @itemName);";
+
+            accessData.InsertCommand = new OleDbCommand(sql, con);
+            accessData.InsertCommand.Parameters.Add("@eMail", OleDbType.WChar, 20, "eMail");
+            accessData.InsertCommand.Parameters.Add("@itemCode", OleDbType.Integer, 4, "itemCode");
+            accessData.InsertCommand.Parameters.Add("@itemName", OleDbType.WChar, 4, "itemName");
         }
 
         #region проверка соединения
@@ -84,7 +96,7 @@ namespace DataProvider
             DataTable dt = new DataTable();
             using (dbConnection = new OleDbConnection(connectionString.ConnectionString))
             {
-                accessData.SelectCommand = new OleDbCommand(SelectAllPurchasesCommand(), dbConnection);
+                accessData.SelectCommand = new OleDbCommand(this.selectAll, dbConnection);
                 accessData.Fill(dt);
             }
             return dt;
@@ -103,6 +115,18 @@ namespace DataProvider
             }
 
             return dt;
+        }
+
+        #endregion
+
+        #region Добавить запись
+        public void AddNewPurchase(object purchases)
+        {
+            using (dbConnection = new OleDbConnection(connectionString.ConnectionString))
+            {
+                AddNewPurchaseCommand(dbConnection);
+                accessData.Update(purchases as DataTable);
+            }
         }
 
         #endregion

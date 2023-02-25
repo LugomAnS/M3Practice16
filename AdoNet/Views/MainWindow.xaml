@@ -111,7 +111,9 @@
 
             <GroupBox Grid.Row="1" Grid.Column="1" Header="Новая покупка">
                 <DockPanel>
-                    <Button DockPanel.Dock="Bottom" Content="Добавить покупку" HorizontalAlignment="Center"/>
+                    <Button DockPanel.Dock="Bottom" Content="Добавить покупку" HorizontalAlignment="Center"
+                            Command="{Binding AddNewPurchase}"
+                            CommandParameter="{Binding SelectedClient}"/>
 
                     <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Margin="1">
                         <TextBlock Text="Клиент: " HorizontalAlignment="Right" Margin="1" />
@@ -123,8 +125,8 @@
                     <StackPanel Orientation="Vertical">
                         <TextBlock Margin="1" Text="{Binding SelectedClient.Row.ItemArray[2]}" />
                         <TextBlock Margin="1" Text="{Binding SelectedClient.Row.ItemArray[5]}"/>
-                        <TextBox />
-                        <TextBox />
+                        <TextBox Text="{Binding ItemCode, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Text="{Binding ItemName, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </DockPanel>
             </GroupBox>

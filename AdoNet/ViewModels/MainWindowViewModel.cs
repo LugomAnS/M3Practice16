@@ -96,6 +96,24 @@ namespace AdoNet.ViewModels
         }
         #endregion
 
+        #region Свойства для новой покупки
+        private string itemCode;
+        public string ItemCode
+        {
+            get => itemCode;
+            set => Set(ref itemCode, value);
+        }
+
+        private string itemName;
+        public string ItemName
+        {
+            get => itemName;
+            set => Set(ref itemName, value);
+        }
+
+        #endregion
+
+
         #region Статус обработки запроса
         private string requestStatus;
         public string RequestStatus
@@ -124,6 +142,9 @@ namespace AdoNet.ViewModels
             DeleteClientRecordCommand = new Command(OnDeleteClientRecordExecute,
                                                     CanDeleteClientRecordCommandExecute);
 
+            AddNewPurchase = new Command(OnAddNewPurchaseExecute,
+                                         CanAddNewPurchaseExecute);
+
             sqlConnection = new SQLConnectionDB();
             SQLConnectionString = sqlConnection.SQLConnectionString;
             sqlConnection.ConnectionState += SQLConnectionStatusChange;
@@ -145,12 +166,6 @@ namespace AdoNet.ViewModels
         private void GetSelectedClientPurchases(string clientEmail)
         {
             Purchases = accessConnection.GetClientPurchases(clientEmail); 
-        }
-
-        private void DeleteClientRecord()
-        {
-            SelectedClient.Row.Delete();
-            sqlConnection.UpdateDBInformationAsync(Clients);
         }
 
         #region Команды
@@ -223,6 +238,23 @@ namespace AdoNet.ViewModels
         }
 
         private bool CanDeleteClientRecordCommandExecute(object p) => p != null;
+        #endregion
+
+        #region Доавить покупку
+
+        public ICommand AddNewPurchase { get; }
+        private void OnAddNewPurchaseExecute(object p)
+        {
+            DataRow purchase = Purchases.NewRow();
+            purchase[1] = SelectedClient["eMail"];
+            purchase[2] = ItemCode;
+            purchase[3] = ItemName;
+
+            Purchases.Rows.Add(purchase);
+            accessConnection.AddNewPurchase(Purchases);
+        }
+        private bool CanAddNewPurchaseExecute(object p) => p != null;
+
         #endregion
 
         #endregion
