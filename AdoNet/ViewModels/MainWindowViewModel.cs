@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -169,7 +170,26 @@ namespace AdoNet.ViewModels
             }
         }
 
-        public string Phone { get; set; }
+        private string phone;
+        public string Phone 
+        {
+            get => phone; 
+            set
+            {
+                ClearErrors();
+                string pattern = @"^[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$";
+                if (!Regex.IsMatch(value, pattern, RegexOptions.None))
+                {
+                    AddError(nameof(Phone), "Введите телефон в формате ХХХ-ХХ-ХХ");
+                }
+                if (String.IsNullOrEmpty(value))
+                {
+                    ClearErrors();
+                }
+
+                Set(ref phone, value);
+            }
+        }
 
         #endregion
 

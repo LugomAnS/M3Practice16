@@ -113,7 +113,7 @@
                         <TextBox Text="{Binding ClientName, UpdateSourceTrigger=PropertyChanged}"/>
                         <TextBox Text="{Binding ClientPatronymic, UpdateSourceTrigger=PropertyChanged}"/>
                         <TextBox Text="{Binding EMail, UpdateSourceTrigger=PropertyChanged}"/>
-                        <TextBox Text="{Binding Phone}"/>
+                        <TextBox Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
 
                 </DockPanel>
