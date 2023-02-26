@@ -13,6 +13,16 @@
     <Window.DataContext>
         <vm:MainWindowViewModel />
     </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip" 
+                    Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     
     <DockPanel LastChildFill="True" Margin="5">
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
@@ -98,11 +108,11 @@
                         <TextBlock Text="Телефон: " HorizontalAlignment="Right" Margin="1"/>
                     </StackPanel>
 
-                    <StackPanel Orientation="Vertical" DataContext="{Binding NewClient}">
-                        <TextBox Text="{Binding Surname, UpdateSourceTrigger=PropertyChanged ,Mode=TwoWay}"/>
-                        <TextBox Text="{Binding Name}"/>
-                        <TextBox Text="{Binding Patronymic}"/>
-                        <TextBox Text="{Binding Email}"/>
+                    <StackPanel Orientation="Vertical">
+                        <TextBox Text="{Binding ClientSurname, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Text="{Binding ClientName, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Text="{Binding ClientPatronymic, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Text="{Binding EMail, UpdateSourceTrigger=PropertyChanged}"/>
                         <TextBox Text="{Binding Phone}"/>
                     </StackPanel>
 

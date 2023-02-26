@@ -1,19 +1,30 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using AdoNet.Infrastructure;
-using AdoNet.Models;
 using DataProvider;
 
 namespace AdoNet.ViewModels
 {
-    internal class MainWindowViewModel : INPC
+    internal class MainWindowViewModel : INPC, INotifyDataErrorInfo
     {
         #region Поля и свойства
+
+        #region Словарь ошибок
+        private readonly Dictionary<string, List<string>> propertyErrors = new Dictionary<string, List<string>>();
+
+        #endregion
+
 
         #region Статус SQL соединения
         private string sqlConnectionStatus;
@@ -81,12 +92,80 @@ namespace AdoNet.ViewModels
         #endregion
 
         #region Новый клиент
-        private Client newClient = new Client();
-        public Client NewClient
+        private string clientSurname;
+        public string ClientSurname
         {
-            get => newClient;
-            set => Set(ref newClient, value);
+            get => clientSurname;
+            set
+            {
+                ClearErrors(nameof(ClientSurname));
+                if (String.IsNullOrEmpty(value))
+                {
+                    AddError(nameof(ClientSurname), "Фамилия не может быть пустой");
+                }
+                if (!value.All(Char.IsLetter))
+                {
+                    AddError(nameof(ClientSurname), "Фамилия должна содержать только буквы");
+                }
+                Set(ref clientSurname, value);
+            }
         }
+
+        private string clientName;
+        public string ClientName
+        {
+            get => clientName;
+            set 
+            {
+                ClearErrors(nameof(ClientName));
+                if (String.IsNullOrEmpty(value))
+                {
+                    AddError(nameof(ClientName), "Имя не может быть пустым");
+                }
+                if (!value.All(Char.IsLetter))
+                {
+                    AddError(nameof(ClientName), "Имя должно содержать только буквы");
+                }
+                Set(ref clientName, value);
+            }
+        }
+
+        private string clientPatronymic;
+        public string ClientPatronymic
+        {
+            get => clientPatronymic;
+            set
+            {
+                ClearErrors(nameof(ClientPatronymic));
+                if (String.IsNullOrEmpty(value))
+                {
+                    AddError(nameof(ClientPatronymic), "Отчество не может быть пустым");
+                }
+                if (!value.All(Char.IsLetter))
+                {
+                    AddError(nameof(ClientPatronymic), "Отчество должно содержать только буквы");
+                }
+                Set(ref clientPatronymic, value);
+            }
+        }
+
+        private string eMail;
+        public string EMail
+        {
+            get => eMail;
+            set
+            {
+                ClearErrors(nameof(EMail));
+                if (String.IsNullOrEmpty(value))
+                {
+                    AddError(nameof(EMail), "Почта не может быть пустым");
+                }
+                Set(ref eMail, value);
+            }
+        }
+
+        public string Phone { get; set; }
+
         #endregion
 
         #region Данные о покупках
@@ -103,14 +182,32 @@ namespace AdoNet.ViewModels
         public string ItemCode
         {
             get => itemCode;
-            set => Set(ref itemCode, value);
+            set
+            {
+                ClearErrors();
+                if (!value.All(Char.IsDigit))
+                {
+                    AddError(nameof(ItemCode), "Код товара может быть только числом");
+                }
+                Set(ref itemCode, value);
+
+            }
         }
 
         private string itemName;
         public string ItemName
         {
             get => itemName;
-            set => Set(ref itemName, value);
+            set
+            {
+                ClearErrors();
+                if (String.IsNullOrEmpty(value))
+                {
+                    AddError(nameof(ItemName), "Наименование товара не может быть пустым");
+                }
+                Set(ref itemName, value);
+            }
+            
         }
 
         #endregion
@@ -118,6 +215,7 @@ namespace AdoNet.ViewModels
 
         #region Статус обработки запроса
         private string requestStatus;
+
         public string RequestStatus
         {
             get => requestStatus;
@@ -212,11 +310,11 @@ namespace AdoNet.ViewModels
 
             // Плохое решение, при изменении структуры таблица придеться дописывать
             DataRow client = tmpTable.NewRow();
-            client[1] = NewClient.Name;
-            client[2] = NewClient.Surname;
-            client[3] = NewClient.Patronymic;
-            client[4] = NewClient.Phone;
-            client[5] = NewClient.Email;
+            client[1] = ClientName;
+            client[2] = ClientSurname;
+            client[3] = ClientPatronymic;
+            client[4] = Phone;
+            client[5] = EMail;
 
             tmpTable.Rows.Add(client);
 
@@ -225,6 +323,18 @@ namespace AdoNet.ViewModels
 
         private bool CanAddNewClientCommandExecute(object p)
         {
+            if ( (String.IsNullOrEmpty(ClientName) || String.IsNullOrEmpty(ClientSurname)
+                || String.IsNullOrEmpty(ClientPatronymic) || String.IsNullOrEmpty(EMail)) )
+            {
+                return false;
+            }
+
+            if ( propertyErrors.ContainsKey(nameof(ClientName)) || propertyErrors.ContainsKey(nameof(ClientSurname))
+                || propertyErrors.ContainsKey(nameof(ClientPatronymic)) || propertyErrors.ContainsKey(nameof(EMail)) )
+            {
+                return false;
+            }
+
             return true;
         }
 
@@ -242,7 +352,7 @@ namespace AdoNet.ViewModels
         private bool CanDeleteClientRecordCommandExecute(object p) => p != null;
         #endregion
 
-        #region Доавить покупку
+        #region Добавить покупку
 
         public ICommand AddNewPurchase { get; }
         private void OnAddNewPurchaseExecute(object p)
@@ -256,13 +366,12 @@ namespace AdoNet.ViewModels
             accessConnection.AddNewPurchase(Purchases);
         }
         private bool CanAddNewPurchaseExecute(object p) 
-            => (p != null) && (!String.IsNullOrEmpty(ItemCode)) && (ItemCode.All(c => Char.IsDigit(c)));
+            => (p != null) && (!String.IsNullOrEmpty(ItemCode)) 
+            && !propertyErrors.ContainsKey(nameof(ItemCode)) && (!String.IsNullOrEmpty(ItemName));
 
         #endregion
 
-        #endregion
-
-        #region Prism Commands as Event
+        #region Prism - Event as Commands
 
         #region Изменение клиента по завершении редактирования ячейки
         public ICommand CellEditEndCommand { get; }
@@ -288,9 +397,50 @@ namespace AdoNet.ViewModels
             sqlConnection.UpdateDBInformationAsync(Clients);
         }
 
+
         #endregion
 
         #endregion
+
+        #endregion
+
+        #region INotifyDataErrorInfo
+
+        public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
+
+        public bool HasErrors => propertyErrors.Any();
+
+        public IEnumerable GetErrors(string? propertyName)
+        {
+            return propertyErrors.GetValueOrDefault(propertyName, null);
+        }
+
+        public void AddError(string propertyName, string errorMessage)
+        {
+            if (!propertyErrors.ContainsKey(propertyName))
+            {
+                propertyErrors.Add(propertyName, new List<string>());
+            }
+
+            propertyErrors[propertyName].Add(errorMessage);
+            OnErrorsChanged(propertyName);
+        }
+
+        private void ClearErrors([CallerMemberName]string propertyName = null)
+        {
+            if (propertyErrors.ContainsKey(propertyName))
+            {
+                propertyErrors.Remove(propertyName);
+                OnErrorsChanged(propertyName);
+            }
+        }
+
+        private void OnErrorsChanged(string propertyName)
+        {
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
+        #endregion
+
     }
 
 }
