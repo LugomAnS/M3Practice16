@@ -27,7 +27,7 @@ namespace AdoNet.ViewModels
 
 
         #region Статус SQL соединения
-        private string sqlConnectionStatus;
+        private string sqlConnectionStatus= ConnectionState.Closed.ToString();
         public string SqlConnectionStatus
         {
             get => sqlConnectionStatus;
@@ -40,11 +40,16 @@ namespace AdoNet.ViewModels
         #endregion
 
         #region SQL строка соединения
-        public string SQLConnectionString { get; set; }
+        private string sqlConnectionsString; 
+        public string SQLConnectionString 
+        {
+            get => sqlConnectionsString;
+            set => Set(ref sqlConnectionsString, value); 
+        }
         #endregion
 
         #region Статус Access соединения
-        private string accessConnectionStatus;
+        private string accessConnectionStatus = ConnectionState.Closed.ToString();
         public string AccessConnectionStatus
         {
             get => accessConnectionStatus;
@@ -288,7 +293,7 @@ namespace AdoNet.ViewModels
             Clients = sqlConnection.GetClients();
         }
         private bool CanGetAllClientsCommandExecute(object p)
-            => SqlConnectionStatus == ConnectionState.Closed.ToString() || SqlConnectionStatus == null;
+            => SqlConnectionStatus == ConnectionState.Closed.ToString();
 
         #endregion
 
